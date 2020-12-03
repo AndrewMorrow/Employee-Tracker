@@ -15,20 +15,93 @@ const connection = mysql.createConnection({
     database: "employeetracker_db",
 });
 
-connection.connect(function (err) {
+connection.connect((err) => {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
+    start();
 });
 
-// list pf options
+// list of options(kicks everything off)
+function start() {
+    console.log("Start inquirer prompts");
+    // addDept();
+    addEmployee();
+}
 
 // add departments
+function addDept() {
+    console.log("add dept");
+    let deptName = "Clothing";
+
+    connection.query(
+        "INSERT INTO department SET ?",
+        {
+            name: deptName,
+        },
+        (err) => {
+            if (err) throw err;
+            console.log("Your department was successfully added!");
+            addRole();
+            // start();
+        }
+    );
+}
 
 // add roles
+function addRole() {
+    console.log("add role");
+    let title = "Sales Manager";
+    let salary = 50000;
+    let deptId = 1;
+
+    connection.query(
+        "INSERT INTO role SET ?",
+        {
+            title: title,
+            salary: salary,
+            department_id: deptId,
+        },
+        (err) => {
+            if (err) throw err;
+            console.log("Your role was successfully added!");
+            addEmployee();
+            // start();
+        }
+    );
+}
 
 // add employees
+function addEmployee() {
+    console.log("add employee");
+    let firstName = "Joey";
+    let lastName = "Bag O Donuts";
+    let role = 1;
+    let manager = 1;
+
+    connection.query(
+        "INSERT INTO employee SET ?",
+        {
+            first_name: firstName,
+            last_name: lastName,
+            role_id: role,
+            manager_id: manager,
+        },
+        (err) => {
+            if (err) throw err;
+            console.log("Your employee was successfully added!");
+            // start();
+        }
+    );
+}
 
 // view departments
+function viewDept() {
+    connection.query("SELECT * FROM departments", (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        // start();
+    });
+}
 
 // view roles
 
