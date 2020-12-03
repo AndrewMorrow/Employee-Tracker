@@ -25,7 +25,7 @@ connection.connect((err) => {
 function start() {
     console.log("Start inquirer prompts");
     // addDept();
-    viewRoles();
+    viewEmployees();
 }
 
 // add departments
@@ -125,6 +125,23 @@ function viewRoles() {
 }
 
 // view employees
+function viewEmployees() {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        // console.log(res);
+        let employeesArray = [];
+        let employee = {};
+        for (var i = 0; i < res.length; i++) {
+            employee = {
+                firstName: res[i].first_name,
+                lastName: res[i].last_name,
+            };
+            employeesArray.push(employee);
+        }
+        return employeesArray;
+        // start();
+    });
+}
 
 // update employee roles
 
