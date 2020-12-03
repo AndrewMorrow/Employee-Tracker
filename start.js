@@ -25,13 +25,13 @@ connection.connect((err) => {
 function start() {
     console.log("Start inquirer prompts");
     // addDept();
-    viewDept();
+    viewRoles();
 }
 
 // add departments
 function addDept() {
     console.log("add dept");
-    let deptName = "Clothing";
+    let deptName = "Customer Service";
 
     connection.query(
         "INSERT INTO department SET ?",
@@ -41,7 +41,7 @@ function addDept() {
         (err) => {
             if (err) throw err;
             console.log("Your department was successfully added!");
-            addRole();
+            // addRole();
             // start();
         }
     );
@@ -98,11 +98,11 @@ function addEmployee() {
 function viewDept() {
     connection.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
-        console.log(res);
-        console.log(res[0].name);
+        // console.log(res);
         var deptArray = [];
-        for (var i = 0; i < results.length; i++) {
-            choiceArray.push(res[i].name);
+        for (var i = 0; i < res.length; i++) {
+            deptArray.push(res[i].name);
+            console.log(res[i].name);
         }
         return deptArray;
         // start();
@@ -110,6 +110,19 @@ function viewDept() {
 }
 
 // view roles
+function viewRoles() {
+    connection.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        // console.log(res);
+        var rolesArray = [];
+        for (var i = 0; i < res.length; i++) {
+            rolesArray.push(res[i].title);
+            console.log(res[i].title);
+        }
+        return rolesArray;
+        // start();
+    });
+}
 
 // view employees
 
