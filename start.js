@@ -25,7 +25,7 @@ connection.connect((err) => {
 function start() {
     console.log("Start inquirer prompts");
     // addDept();
-    addEmployee();
+    viewDept();
 }
 
 // add departments
@@ -96,9 +96,15 @@ function addEmployee() {
 
 // view departments
 function viewDept() {
-    connection.query("SELECT * FROM departments", (err, res) => {
+    connection.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
         console.log(res);
+        console.log(res[0].name);
+        var deptArray = [];
+        for (var i = 0; i < results.length; i++) {
+            choiceArray.push(res[i].name);
+        }
+        return deptArray;
         // start();
     });
 }
