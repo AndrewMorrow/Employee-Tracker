@@ -25,7 +25,7 @@ connection.connect((err) => {
 function start() {
     console.log("Start inquirer prompts");
     // addDept();
-    viewEmployees();
+    roleUpdate();
 }
 
 // add departments
@@ -144,8 +144,48 @@ function viewEmployees() {
 }
 
 // update employee roles
+function roleUpdate() {
+    // select all to loop through results for inq choices
+    // connection.query("SELECT * FROM employee", (err, res) => {
+    //     if (err) throw err;
+    // console.log(res);
+    let employeesArray = [];
+    // let employee = {};
+    // for (var i = 0; i < res.length; i++) {
+    //     employee = {
+    //         firstName: res[i].first_name,
+    //         lastName: res[i].last_name,
+    //     };
+    //     employeesArray.push(employee);
+    // }
+    // start();
+
+    let newId = 2;
+    let employeeId = 3;
+    connection.query(
+        "UPDATE employee SET ? WHERE ?",
+        [{ role_id: newId }, { id: employeeId }],
+        (err, res) => {
+            console.log("Your employee role was updated");
+            // start();
+        }
+    );
+    // });
+}
 
 // update employee manager
+function managerUpdate() {
+    let newId = 2;
+    let employeeId = 3;
+    connection.query(
+        "UPDATE employee SET ? WHERE ?",
+        [{ manager_id: newId }, { id: employeeId }],
+        (err, res) => {
+            console.log("Your employee manager was updated");
+            // start();
+        }
+    );
+}
 
 // view employees under a manager
 
