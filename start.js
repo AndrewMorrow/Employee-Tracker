@@ -25,7 +25,7 @@ connection.connect((err) => {
 function start() {
     console.log("Start inquirer prompts");
     // addDept();
-    roleUpdate();
+    deleteEmployee();
 }
 
 // add departments
@@ -190,9 +190,48 @@ function managerUpdate() {
 // view employees under a manager
 
 // delete departments
+function deleteDept() {
+    let dept = 1;
+    connection.query(
+        "DELETE FROM department WHERE ?",
+        {
+            id: dept,
+        },
+        (err, res) => {
+            if (err) throw err;
+            console.log("Your dept has been deleted.");
+        }
+    );
+}
 
 // delete roles
+function deleteRole() {
+    let role = 2;
+    connection.query(
+        "DELETE FROM role WHERE ?",
+        {
+            id: role,
+        },
+        (err, res) => {
+            if (err) throw err;
+            console.log("Your role has been deleted.");
+        }
+    );
+}
 
 // delete employees
+function deleteEmployee() {
+    let employeeId = 3;
+    connection.query(
+        "DELETE FROM employee WHERE ?",
+        {
+            id: employeeId,
+        },
+        (err, res) => {
+            if (err) throw err;
+            console.log("Your employee has been deleted.");
+        }
+    );
+}
 
 // view utilized budget for a department(add all salaries)
