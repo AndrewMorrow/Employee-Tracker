@@ -99,7 +99,7 @@ function addDept() {
     inq.prompt({
         name: "newDept",
         type: "input",
-        message: "What department would you liek to add?",
+        message: "What is the department name would you like to add?",
     }).then((answer) => {
         connection.query(
             "INSERT INTO department SET ?",
@@ -118,25 +118,50 @@ function addDept() {
 
 // add roles
 function addRole() {
-    console.log("add role");
-    let title = "Sales Manager";
-    let salary = 50000;
-    let deptId = 1;
-
-    connection.query(
-        "INSERT INTO role SET ?",
+    inq.prompt([
         {
-            title: title,
-            salary: salary,
-            department_id: deptId,
+            name: "title",
+            type: "input",
+            message: "What is the title of your new role?",
         },
-        (err) => {
-            if (err) throw err;
-            console.log("Your role was successfully added!");
-            addEmployee();
-            // start();
+        {
+            name: "salary",
+            type: "input",
+            message: "What is the yearly salary of your new role?",
+        },
+        {
+            name: "deptName",
+            type: "input",
+            message:
+                "What is the name of the department this role will be assigned to?",
+        },
+    ]).then((answer) => {
+        connection.query("SELECT * FROM department", (err, res) => {
+            // let deptId = 1;
+            const deptId = findDeptId(answer, res);
+            connection.query(
+                "INSERT INTO role SET ?",
+                {
+                    title: answer.title,
+                    salary: answer.salary,
+                    department_id: deptId,
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("Your role was successfully added!");
+                    start();
+                }
+            );
+        });
+    });
+}
+
+function findDeptId(answer, res) {
+    for (var i = 0; i < res.length; i++) {
+        if (res[i].name === answer.deptName) {
+            return res[i].id;
         }
-    );
+    }
 }
 
 // add employees
