@@ -24,8 +24,74 @@ connection.connect((err) => {
 // list of options(kicks everything off)
 function start() {
     console.log("Start inquirer prompts");
-    // addDept();
-    deleteEmployee();
+    inq.prompt({
+        name: "action",
+        type: "rawlist",
+        message: "What would you like to do?",
+        choices: [
+            "Add a department",
+            "Add a role",
+            "Add an employee",
+            "View all departments",
+            "View all roles",
+            "View all employees",
+            "Update an employee role",
+            "Update an employee's manager",
+            "Delete a department",
+            "Delete a role",
+            "None",
+        ],
+    }).then(function (answer) {
+        switch (answer.action) {
+            case "Add a department":
+                addDept();
+                break;
+
+            case "Add a role":
+                addRole();
+                break;
+
+            case "Add an employee":
+                addEmployee();
+                break;
+
+            case "View all departments":
+                viewDepts();
+                break;
+
+            case "View all roles":
+                viewRoles();
+                break;
+
+            case "View all employees":
+                viewEmployees();
+                break;
+
+            case "Update an employee role":
+                updateRole();
+                break;
+            case "Update an employee's manager":
+                updateManager();
+                break;
+
+            case "Delete a department":
+                deleteDept();
+                break;
+
+            case "Delete a role":
+                deleteRole();
+                break;
+
+            case "Delete a employee":
+                deleteEmployee();
+                break;
+
+            case "None":
+                console.log("Thank you for using employee tracker!");
+                connection.end();
+                break;
+        }
+    });
 }
 
 // add departments
@@ -95,7 +161,7 @@ function addEmployee() {
 }
 
 // view departments
-function viewDept() {
+function viewDepts() {
     connection.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
         // console.log(res);
@@ -144,7 +210,7 @@ function viewEmployees() {
 }
 
 // update employee roles
-function roleUpdate() {
+function updateRole() {
     // select all to loop through results for inq choices
     // connection.query("SELECT * FROM employee", (err, res) => {
     //     if (err) throw err;
@@ -174,7 +240,7 @@ function roleUpdate() {
 }
 
 // update employee manager
-function managerUpdate() {
+function updateManager() {
     let newId = 2;
     let employeeId = 3;
     connection.query(
@@ -187,7 +253,7 @@ function managerUpdate() {
     );
 }
 
-// view employees under a manager
+// view employees under a manager(join)
 
 // delete departments
 function deleteDept() {
@@ -234,4 +300,4 @@ function deleteEmployee() {
     );
 }
 
-// view utilized budget for a department(add all salaries)
+// view utilized budget for a department(add all salaries)(join)
