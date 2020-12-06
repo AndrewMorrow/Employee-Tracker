@@ -96,21 +96,24 @@ function start() {
 
 // add departments
 function addDept() {
-    console.log("add dept");
-    let deptName = "Customer Service";
+    inq.prompt({
+        name: "newDept",
+        type: "input",
+        message: "What department would you liek to add?",
+    }).then((answer) => {
+        connection.query(
+            "INSERT INTO department SET ?",
+            {
+                name: answer.newDept,
+            },
+            (err) => {
+                if (err) throw err;
+                console.log("Your department was successfully added!");
 
-    connection.query(
-        "INSERT INTO department SET ?",
-        {
-            name: deptName,
-        },
-        (err) => {
-            if (err) throw err;
-            console.log("Your department was successfully added!");
-            // addRole();
-            // start();
-        }
-    );
+                start();
+            }
+        );
+    });
 }
 
 // add roles
