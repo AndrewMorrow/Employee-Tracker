@@ -166,26 +166,107 @@ function findDeptId(answer, res) {
 
 // add employees
 function addEmployee() {
-    console.log("add employee");
-    let firstName = "Joey";
-    let lastName = "Bag O Donuts";
-    let role = 1;
-    let manager = 1;
+    // let cheese = roleSelect();
+    // console.log(res);
+    // console.log(roleArray);
 
-    connection.query(
-        "INSERT INTO employee SET ?",
+    inq.prompt([
         {
-            first_name: firstName,
-            last_name: lastName,
-            role_id: role,
-            manager_id: manager,
+            name: "firstName",
+            type: "input",
+            message: "What is the employee's first name?",
         },
-        (err) => {
-            if (err) throw err;
-            console.log("Your employee was successfully added!");
-            // start();
+        {
+            name: "lastName",
+            type: "input",
+            message: "What is the employee's last name?",
+        },
+        // {
+        //     name: "role",
+        //     type: "rawlist",
+        //     choices: cheese,
+        //     message: "What is the employee's role?",
+        // },
+        // {
+        //     name: "manager",
+        //     type: "rawlist",
+        //     choices: () => {
+        //         let managerArray = ["None"];
+        //         for (var i = 0; i < res.length; i++) {
+        //             managerArray.push(
+        //                 `${res[i].first_name} ${res[i].last_name}`
+        //             );
+        //         }
+        //         return managerArray;
+        //     },
+        //     message: "Who is the employee's manager?",
+        // },
+    ]).then((answer) => {
+        let firstName = answer.firstName;
+        let lastName = answer.lastName;
+        getEmployeeRole(firstName, lastName);
+        connection.query(
+            "INSERT INTO employee SET ?",
+            {
+                first_name: answer.firstName,
+                last_name: answer.lastName,
+                role_id: role,
+                // manager_id: manager,
+            },
+            (err) => {
+                if (err) throw err;
+                console.log("Your employee was successfully added!");
+                // start();
+            }
+        );
+    });
+}
+
+function getEmployeeRole(firstName, lastName) {
+    connection.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        let roleArray = [];
+        for (var i = 0; i < res.length; i++) {
+            roleArray.push(res[i].title);
         }
-    );
+
+        inq.prompt([
+            {
+                name: "role",
+                type: "rawlist",
+                choices: roleArray,
+                message: "What is the employee's role?",
+            },
+        ]).then((answer) => {
+            let role = answer.role;
+            getEmployeeManager(firstName, lastName, role);
+        });
+    });
+}
+
+function getEmployeeManager(firstName, lastName, role) {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+
+        inq.prompt([
+            {
+                name: "manager",
+                type: "rawlist",
+                choices: () => {
+                    let managerArray = ["None"];
+                    for (var i = 0; i < res.length; i++) {
+                        managerArray.push(
+                            `${res[i].first_name} ${res[i].last_name}`
+                        );
+                    }
+                    return managerArray;
+                },
+                message: "Who is the employee's manager?",
+            },
+        ]).then((answer) => {
+            let manager = answer.manager;
+        });
+    });
 }
 
 // view departments
