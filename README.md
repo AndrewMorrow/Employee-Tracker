@@ -26,7 +26,9 @@ After running "npm start" or "node start" the user will be given a list of optio
 <img src = "assets/images/employeeTrackerScreenshot.png" alt= 'Screenshot of program'>
 
 Click the image below to view the demo video!
-[![Demo Video]()]()
+[![Demo Video](assets/images/employeeTrackerScreenshot.png)](https://drive.google.com/file/d/1X2b2WRVmlQ6CAv2jNj827Xrd_JUhCmkM/view)
+
+<iframe src="https://drive.google.com/file/d/1X2b2WRVmlQ6CAv2jNj827Xrd_JUhCmkM/preview" width="640" height="480"></iframe>
 
 ## License
 

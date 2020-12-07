@@ -229,7 +229,7 @@ function addEmployee() {
                     },
                 ]).then((answer) => {
                     if (answer.manager !== "None") {
-                        let indexMan = managerArray.indexOf(answer.manager);
+                        let indexMan = managerArray.indexOf(answer.manager) - 1;
                         let managerId = res[indexMan].id;
                         insertEmployee(firstName, lastName, role, managerId);
                     } else {
