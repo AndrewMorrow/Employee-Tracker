@@ -342,7 +342,6 @@ function updateRole() {
                 ]).then((answer) => {
                     let indexId = rolesArray.indexOf(answer.roleChange);
                     let newRoleId = res[indexId].id;
-                    console.log(newRoleId);
                     connection.query(
                         "UPDATE employee SET ? WHERE ?",
                         [{ role_id: newRoleId }, { id: employeeId }],
