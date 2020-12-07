@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inq = require("inquirer");
+const cTable = require("console.table");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -240,52 +241,52 @@ function addEmployee() {
     });
 }
 
-function getEmployeeRole(firstName, lastName) {
-    connection.query("SELECT * FROM role", (err, res) => {
-        if (err) throw err;
-        let roleArray = [];
-        for (var i = 0; i < res.length; i++) {
-            roleArray.push(res[i].title);
-        }
+// function getEmployeeRole(firstName, lastName) {
+//     connection.query("SELECT * FROM role", (err, res) => {
+//         if (err) throw err;
+//         let roleArray = [];
+//         for (var i = 0; i < res.length; i++) {
+//             roleArray.push(res[i].title);
+//         }
 
-        inq.prompt([
-            {
-                name: "role",
-                type: "rawlist",
-                choices: roleArray,
-                message: "What is the employee's role?",
-            },
-        ]).then((answer) => {
-            let role = answer.role;
-            getEmployeeManager(firstName, lastName, role);
-        });
-    });
-}
+//         inq.prompt([
+//             {
+//                 name: "role",
+//                 type: "rawlist",
+//                 choices: roleArray,
+//                 message: "What is the employee's role?",
+//             },
+//         ]).then((answer) => {
+//             let role = answer.role;
+//             getEmployeeManager(firstName, lastName, role);
+//         });
+//     });
+// }
 
-function getEmployeeManager(firstName, lastName, role) {
-    connection.query("SELECT * FROM employee", (err, res) => {
-        if (err) throw err;
+// function getEmployeeManager(firstName, lastName, role) {
+//     connection.query("SELECT * FROM employee", (err, res) => {
+//         if (err) throw err;
 
-        inq.prompt([
-            {
-                name: "manager",
-                type: "rawlist",
-                choices: () => {
-                    let managerArray = ["None"];
-                    for (var i = 0; i < res.length; i++) {
-                        managerArray.push(
-                            `${res[i].first_name} ${res[i].last_name}`
-                        );
-                    }
-                    return managerArray;
-                },
-                message: "Who is the employee's manager?",
-            },
-        ]).then((answer) => {
-            let manager = answer.manager;
-        });
-    });
-}
+//         inq.prompt([
+//             {
+//                 name: "manager",
+//                 type: "rawlist",
+//                 choices: () => {
+//                     let managerArray = ["None"];
+//                     for (var i = 0; i < res.length; i++) {
+//                         managerArray.push(
+//                             `${res[i].first_name} ${res[i].last_name}`
+//                         );
+//                     }
+//                     return managerArray;
+//                 },
+//                 message: "Who is the employee's manager?",
+//             },
+//         ]).then((answer) => {
+//             let manager = answer.manager;
+//         });
+//     });
+// }
 
 // view departments
 function viewDepts() {
@@ -295,10 +296,12 @@ function viewDepts() {
         var deptArray = [];
         for (var i = 0; i < res.length; i++) {
             deptArray.push(res[i].name);
-            console.log(res[i].name);
+            // console.log(res[i].name);
         }
-        return deptArray;
-        // start();
+        // console.log(deptArray);
+
+        console.table("Departments", [deptArray]);
+        // return deptArray;
     });
 }
 
@@ -310,10 +313,10 @@ function viewRoles() {
         var rolesArray = [];
         for (var i = 0; i < res.length; i++) {
             rolesArray.push(res[i].title);
-            console.log(res[i].title);
         }
-        return rolesArray;
-        // start();
+        console.table("Roles", [rolesArray]);
+        // return rolesArray;
+        start();
     });
 }
 
@@ -325,14 +328,15 @@ function viewEmployees() {
         let employeesArray = [];
         let employee = {};
         for (var i = 0; i < res.length; i++) {
-            employee = {
-                firstName: res[i].first_name,
-                lastName: res[i].last_name,
-            };
-            employeesArray.push(employee);
+            // employee = {
+            //     firstName: res[i].first_name,
+            //     lastName: res[i].last_name,
+            // };
+            employeesArray.push(`${res[i].first_name} ${res[i].last_name}`);
         }
-        return employeesArray;
-        // start();
+        console.table("Employees", [employeesArray]);
+        // return employeesArray;
+        start();
     });
 }
 
@@ -395,32 +399,31 @@ function updateRole() {
             });
         });
     });
-
-    //  select all to loop through results for inq choices
-
-    // let employeesArray = [];
-    //  let employee = {};
-    //  for (var i = 0; i < res.length; i++) {
-    //      employee = {
-    //          firstName: res[i].first_name,
-    //          lastName: res[i].last_name,
-    //      };
-    //      employeesArray.push(employee);
-    //  }
-    // start();
-
-    // let newId = 2;
-    // let employeeId = 3;
-    // connection.query(
-    //     "UPDATE employee SET ? WHERE ?",
-    //     [{ role_id: newId }, { id: employeeId }],
-    //     (err, res) => {
-    //         console.log("Your employee role was updated");
-    //         // start();
-    //     }
-    // );
-    // });
 }
+//  select all to loop through results for inq choices
+
+// let employeesArray = [];
+//  let employee = {};
+//  for (var i = 0; i < res.length; i++) {
+//      employee = {
+//          firstName: res[i].first_name,
+//          lastName: res[i].last_name,
+//      };
+//      employeesArray.push(employee);
+//  }
+// start();
+
+// let newId = 2;
+// let employeeId = 3;
+// connection.query(
+//     "UPDATE employee SET ? WHERE ?",
+//     [{ role_id: newId }, { id: employeeId }],
+//     (err, res) => {
+//         console.log("Your employee role was updated");
+//         // start();
+//     }
+// );
+// });
 
 // update employee manager
 function updateManager() {
