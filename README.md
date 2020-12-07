@@ -23,6 +23,11 @@ This application requires Node.js which can be downloaded <a href="https://nodej
 
 After running "npm start" or "node start" the user will be given a list of options to manage the database. Once an option is selected they are presented with a series of questions based on the chosen task. The program interfaces with the database behind the scenes to perform the task at hand and then takes the user back to the start with a list of options. The user may select "None" to end the program from the main menu.
 
+<img src = "assets/images/employeeTrackerScreenshot.png" alt= 'Screenshot of program'>
+
+Click the image below to view the demo video!
+[![Demo Video]()]()
+
 ## License
 
 This project is not utilizing a license
@@ -33,7 +38,7 @@ This is a fully open source project, you may fork the repository and any pull re
 
 ## Test Instructions
 
-Install all required modules with "npm install" in the root directory. Then run "npm start" or "node start" to kick the program off. This interacts with a localhost of mySQL server
+Install all required modules with "npm install" in the root directory. Then run "npm start" or "node start" to kick the program off. This interacts with a localhost of mySQL server, you may also use a remote instance of mySQL server but you will have to reconfigure the settings accordingly.
 
 ## Questions
 
