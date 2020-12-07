@@ -356,30 +356,6 @@ function updateRole() {
         });
     });
 }
-//  select all to loop through results for inq choices
-
-// let employeesArray = [];
-//  let employee = {};
-//  for (var i = 0; i < res.length; i++) {
-//      employee = {
-//          firstName: res[i].first_name,
-//          lastName: res[i].last_name,
-//      };
-//      employeesArray.push(employee);
-//  }
-// start();
-
-// let newId = 2;
-// let employeeId = 3;
-// connection.query(
-//     "UPDATE employee SET ? WHERE ?",
-//     [{ role_id: newId }, { id: employeeId }],
-//     (err, res) => {
-//         console.log("Your employee role was updated");
-//         // start();
-//     }
-// );
-// });
 
 // update employee manager
 function updateManager() {
@@ -429,6 +405,17 @@ function updateManager() {
 }
 
 // view employees under a manager(join)
+function employeeManagement() {
+    let query = "SELECT  ";
+    connection.query(
+        query,
+        [{ manager_id: managerId }, { id: employeeId }],
+        (err, res) => {
+            console.log("Your employee manager was updated");
+            start();
+        }
+    );
+}
 
 // delete departments
 function deleteDept() {
