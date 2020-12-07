@@ -457,7 +457,7 @@ function deleteDept() {
                 },
                 (err, res) => {
                     if (err) throw err;
-                    console.log("Your dept has been deleted.");
+                    console.log("The department has been deleted.");
                     start();
                 }
             );
@@ -467,17 +467,37 @@ function deleteDept() {
 
 // delete roles
 function deleteRole() {
-    let role = 2;
-    connection.query(
-        "DELETE FROM role WHERE ?",
-        {
-            id: role,
-        },
-        (err, res) => {
-            if (err) throw err;
-            console.log("Your role has been deleted.");
-        }
-    );
+    connection.query("SELECT * FROM role", (err, res) => {
+        let rolesArray = [];
+        if (err) throw err;
+        inq.prompt([
+            {
+                name: "role",
+                type: "rawlist",
+                choices: () => {
+                    for (var i = 0; i < res.length; i++) {
+                        rolesArray.push(res[i].title);
+                    }
+                    return rolesArray;
+                },
+                message: "Which role would you like to delete?",
+            },
+        ]).then((answer) => {
+            let indexId = rolesArray.indexOf(answer.role);
+            let delRole = res[indexId].id;
+            connection.query(
+                "DELETE FROM role WHERE ?",
+                {
+                    id: delRole,
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    console.log("Your role has been deleted.");
+                    start();
+                }
+            );
+        });
+    });
 }
 
 // delete employees
