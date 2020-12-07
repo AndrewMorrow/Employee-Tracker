@@ -137,7 +137,7 @@ function addRole() {
         },
     ]).then((answer) => {
         connection.query("SELECT * FROM department", (err, res) => {
-            // let deptId = 1;
+            if (err) throw err;
             const deptId = findDeptId(answer, res);
             connection.query(
                 "INSERT INTO role SET ?",
@@ -166,59 +166,77 @@ function findDeptId(answer, res) {
 
 // add employees
 function addEmployee() {
-    // let cheese = roleSelect();
-    // console.log(res);
-    // console.log(roleArray);
-
-    inq.prompt([
-        {
-            name: "firstName",
-            type: "input",
-            message: "What is the employee's first name?",
-        },
-        {
-            name: "lastName",
-            type: "input",
-            message: "What is the employee's last name?",
-        },
-        // {
-        //     name: "role",
-        //     type: "rawlist",
-        //     choices: cheese,
-        //     message: "What is the employee's role?",
-        // },
-        // {
-        //     name: "manager",
-        //     type: "rawlist",
-        //     choices: () => {
-        //         let managerArray = ["None"];
-        //         for (var i = 0; i < res.length; i++) {
-        //             managerArray.push(
-        //                 `${res[i].first_name} ${res[i].last_name}`
-        //             );
-        //         }
-        //         return managerArray;
-        //     },
-        //     message: "Who is the employee's manager?",
-        // },
-    ]).then((answer) => {
-        let firstName = answer.firstName;
-        let lastName = answer.lastName;
-        getEmployeeRole(firstName, lastName);
-        connection.query(
-            "INSERT INTO employee SET ?",
+    let roleArray = [];
+    connection.query("SELECT * FROM role", (err, res) => {
+        inq.prompt([
             {
-                first_name: answer.firstName,
-                last_name: answer.lastName,
-                role_id: role,
-                // manager_id: manager,
+                name: "firstName",
+                type: "input",
+                message: "What is the employee's first name?",
             },
-            (err) => {
+            {
+                name: "lastName",
+                type: "input",
+                message: "What is the employee's last name?",
+            },
+            {
+                name: "role",
+                type: "rawlist",
+                choices: () => {
+                    if (err) throw err;
+
+                    for (var i = 0; i < res.length; i++) {
+                        roleArray.push(res[i].title);
+                    }
+                    return roleArray;
+                },
+                message: "What is the employee's role?",
+            },
+        ]).then((answer) => {
+            let indexRole = roleArray.indexOf(answer.role);
+            let role = res[indexRole].id;
+            let firstName = answer.firstName;
+            let lastName = answer.lastName;
+            let managerArray = [];
+            connection.query("SELECT * FROM employee", (err, res) => {
                 if (err) throw err;
-                console.log("Your employee was successfully added!");
-                // start();
-            }
-        );
+                inq.prompt([
+                    {
+                        name: "manager",
+                        type: "rawlist",
+                        choices: () => {
+                            for (var i = 0; i < res.length; i++) {
+                                managerArray.push(
+                                    `${res[i].first_name} ${res[i].last_name}`
+                                );
+                            }
+                            return managerArray;
+                        },
+                        message: "Who is the employee's manager?",
+                    },
+                ]).then((answer) => {
+                    let indexMan = managerArray.indexOf(answer.manager);
+                    let managerId = res[indexMan].id;
+
+                    connection.query(
+                        "INSERT INTO employee SET ?",
+                        {
+                            first_name: firstName,
+                            last_name: lastName,
+                            role_id: role,
+                            manager_id: managerId,
+                        },
+                        (err) => {
+                            if (err) throw err;
+                            console.log(
+                                "Your employee was successfully added!"
+                            );
+                            start();
+                        }
+                    );
+                });
+            });
+        });
     });
 }
 
