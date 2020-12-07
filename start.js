@@ -39,6 +39,7 @@ function start() {
             "Update an employee's manager",
             "Delete a department",
             "Delete a role",
+            "Delete a employee",
             "None",
         ],
     }).then(function (answer) {
@@ -502,17 +503,39 @@ function deleteRole() {
 
 // delete employees
 function deleteEmployee() {
-    let employeeId = 3;
-    connection.query(
-        "DELETE FROM employee WHERE ?",
-        {
-            id: employeeId,
-        },
-        (err, res) => {
-            if (err) throw err;
-            console.log("Your employee has been deleted.");
-        }
-    );
+    let employeeArray = [];
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        inq.prompt([
+            {
+                name: "selection",
+                type: "rawlist",
+                choices: () => {
+                    for (var i = 0; i < res.length; i++) {
+                        employeeArray.push(
+                            `${res[i].first_name} ${res[i].last_name}`
+                        );
+                    }
+                    return employeeArray;
+                },
+                message: "Which employee will be deleted?",
+            },
+        ]).then((answer) => {
+            let indexEmp = employeeArray.indexOf(answer.selection);
+            let employeeId = res[indexEmp].id;
+            connection.query(
+                "DELETE FROM employee WHERE ?",
+                {
+                    id: employeeId,
+                },
+                (err, res) => {
+                    if (err) throw err;
+                    console.log("Your employee has been deleted.");
+                    start();
+                }
+            );
+        });
+    });
 }
 
 // view utilized budget for a department(add all salaries)(join)
