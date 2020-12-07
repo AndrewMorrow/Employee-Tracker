@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a CMS application that allows for upkeep of an employee database. It gives the control to manage employees by adding new ones, assigning them roles, and managers. The managers and roles can be updated at any time to give flexibility for promotions and new department expansion. I hope you enjoy using the application and keep your employees up to date!
+This is a C.M.S. application that allows for upkeep of an employee database. It gives the control to manage employees by adding new ones, assigning them roles, and managers. The managers and roles can be updated at any time to give flexibility for promotions and new department expansion. I hope you enjoy using the application and keep your employees up to date!
 
 ## Table of Contents
 
