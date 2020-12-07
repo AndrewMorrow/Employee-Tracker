@@ -338,31 +338,87 @@ function viewEmployees() {
 
 // update employee roles
 function updateRole() {
-    // select all to loop through results for inq choices
-    // connection.query("SELECT * FROM employee", (err, res) => {
-    //     if (err) throw err;
-    // console.log(res);
-    let employeesArray = [];
-    // let employee = {};
-    // for (var i = 0; i < res.length; i++) {
-    //     employee = {
-    //         firstName: res[i].first_name,
-    //         lastName: res[i].last_name,
-    //     };
-    //     employeesArray.push(employee);
-    // }
+    let employeeArray = ["None"];
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        // console.log(res);
+        inq.prompt([
+            {
+                name: "selection",
+                type: "rawlist",
+                choices: () => {
+                    for (var i = 0; i < res.length; i++) {
+                        employeeArray.push(
+                            `${res[i].first_name} ${res[i].last_name}`
+                        );
+                    }
+                    return employeeArray;
+                },
+                message: "Which employee's role would you like to update?",
+            },
+        ]).then((answer) => {
+            // console.log(res);
+            var rolesArray = ["None"];
+            let indexEmp = employeeArray.indexOf(answer.selection) - 1;
+            // console.log(indexEmp);
+            let employeeId = res[indexEmp].id;
+
+            connection.query("SELECT * FROM role", (err, res) => {
+                if (err) throw err;
+
+                inq.prompt([
+                    {
+                        name: "roleChange",
+                        type: "rawlist",
+                        choices: () => {
+                            for (var i = 0; i < res.length; i++) {
+                                rolesArray.push(res[i].title);
+                            }
+                            return rolesArray;
+                        },
+                        message:
+                            "Which role would you like to change the employee to?",
+                    },
+                ]).then((answer) => {
+                    let indexId = rolesArray.indexOf(answer.roleChange) - 1;
+                    let newRoleId = res[indexId].id;
+                    console.log(newRoleId);
+                    connection.query(
+                        "UPDATE employee SET ? WHERE ?",
+                        [{ role_id: newRoleId }, { id: employeeId }],
+                        (err, res) => {
+                            console.log("Your employee role was updated");
+                            start();
+                        }
+                    );
+                });
+            });
+        });
+    });
+
+    //  select all to loop through results for inq choices
+
+    // let employeesArray = [];
+    //  let employee = {};
+    //  for (var i = 0; i < res.length; i++) {
+    //      employee = {
+    //          firstName: res[i].first_name,
+    //          lastName: res[i].last_name,
+    //      };
+    //      employeesArray.push(employee);
+    //  }
     // start();
 
-    let newId = 2;
-    let employeeId = 3;
-    connection.query(
-        "UPDATE employee SET ? WHERE ?",
-        [{ role_id: newId }, { id: employeeId }],
-        (err, res) => {
-            console.log("Your employee role was updated");
-            // start();
-        }
-    );
+    // let newId = 2;
+    // let employeeId = 3;
+    // connection.query(
+    //     "UPDATE employee SET ? WHERE ?",
+    //     [{ role_id: newId }, { id: employeeId }],
+    //     (err, res) => {
+    //         console.log("Your employee role was updated");
+    //         // start();
+    //     }
+    // );
     // });
 }
 
