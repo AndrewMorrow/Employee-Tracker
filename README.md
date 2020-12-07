@@ -42,6 +42,6 @@ Install all required modules with "npm install" in the root directory. Then run 
 
 If there are further questions please contact me with the following.
 
-<img src = "images/githubLogoCrop.png" alt= 'Github Logo' width="15px" height="15px"> AndrewMorrow - <a href="https://github.com/AndrewMorrow" target= "_blank">Github</a>
+<img src = "assets/images/githubLogoCrop.png" alt= 'Github Logo' width="15px" height="15px"> AndrewMorrow - <a href="https://github.com/AndrewMorrow" target= "_blank">Github</a>
 
 Email: beardedmongo@gmail.com
