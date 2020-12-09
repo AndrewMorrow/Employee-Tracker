@@ -35,6 +35,7 @@ function start() {
             "View all departments",
             "View all roles",
             "View all employees",
+            "View all employees under a manager",
             "Update an employee role",
             "Update an employee's manager",
             "Delete a department",
@@ -66,6 +67,10 @@ function start() {
 
             case "View all employees":
                 viewEmployees();
+                break;
+
+            case "View all employees under a manager":
+                viewManaged();
                 break;
 
             case "Update an employee role":
@@ -403,17 +408,41 @@ function updateManager() {
     });
 }
 
-// view employees under a manager(join)
-function employeeManagement() {
-    let query = "SELECT  ";
-    connection.query(
-        query,
-        [{ manager_id: managerId }, { id: employeeId }],
-        (err, res) => {
-            console.log("Your employee manager was updated");
-            start();
-        }
-    );
+// view employees under a manager
+function viewManaged() {
+    connection.query("SELECT * FROM employee", (err, res) => {
+        let employeeArray = [];
+        if (err) throw err;
+        inq.prompt([
+            {
+                name: "selection",
+                type: "rawlist",
+                choices: () => {
+                    for (var i = 0; i < res.length; i++) {
+                        employeeArray.push(
+                            `${res[i].first_name} ${res[i].last_name}`
+                        );
+                    }
+                    return employeeArray;
+                },
+                message: "See managed employees for which manager?",
+            },
+        ]).then((answer) => {
+            managedArray = [];
+            let indexEmp = employeeArray.indexOf(answer.selection);
+            let employeeId = res[indexEmp].id;
+            for (var i = 0; i < res.length; i++) {
+                if (res[i].manager_id === employeeId) {
+                    managedArray.push(
+                        `${res[i].first_name} ${res[i].last_name}`
+                    );
+                }
+            }
+            console.table(`Employees managed by ${answer.selection}`, [
+                managedArray,
+            ]);
+        });
+    });
 }
 
 // delete departments
