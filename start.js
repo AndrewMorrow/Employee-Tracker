@@ -36,6 +36,7 @@ function start() {
             "View all roles",
             "View all employees",
             "View all employees under a manager",
+            "View a department's budget",
             "Update an employee role",
             "Update an employee's manager",
             "Delete a department",
@@ -73,9 +74,14 @@ function start() {
                 viewManaged();
                 break;
 
+            case "View a department's budget":
+                viewDeptBudget();
+                break;
+
             case "Update an employee role":
                 updateRole();
                 break;
+
             case "Update an employee's manager":
                 updateManager();
                 break;
@@ -399,6 +405,7 @@ function updateManager() {
                     "UPDATE employee SET ? WHERE ?",
                     [{ manager_id: managerId }, { id: employeeId }],
                     (err, res) => {
+                        if (err) throw err;
                         console.log("Your employee manager was updated");
                         start();
                     }
@@ -554,3 +561,44 @@ function deleteEmployee() {
 }
 
 // view utilized budget for a department(add all salaries)(join)
+function viewDeptBudget() {
+    connection.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        var deptArray = [];
+        inq.prompt([
+            {
+                name: "dept",
+                type: "rawlist",
+                choices: () => {
+                    for (var i = 0; i < res.length; i++) {
+                        deptArray.push(res[i].name);
+                    }
+                    return deptArray;
+                },
+                message:
+                    "Which department would you like to view the budget for?",
+            },
+        ]).then((answer) => {
+            let indexDept = deptArray.indexOf(answer.dept);
+            let deptId = res[indexDept].id;
+
+            query = `SELECT * FROM role INNER JOIN employee ON role.id = employee.role_id`;
+            connection.query(query, (err, res) => {
+                let budgetArray = [];
+                let total = 0;
+                if (err) throw err;
+                for (var i = 0; i < res.length; i++) {
+                    if (res[i].department_id === deptId)
+                        budgetArray.push(res[i].salary);
+                }
+                budgetArray.forEach((salary) => {
+                    total += salary;
+                });
+                console.log(
+                    `The total budget for the ${answer.dept} department is: $${total}`
+                );
+                start();
+            });
+        });
+    });
+}
